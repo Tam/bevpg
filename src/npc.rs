@@ -1,7 +1,7 @@
 use bevy::prelude::*;
-use crate::assets::PixelFont;
 use crate::{GameState, TILE_SIZE};
 use crate::combat::CombatStats;
+use crate::core::assets::{PixelFont, spawn_tilesheet_sprite, Tilesheet};
 use crate::player::Player;
 
 // Plugin
@@ -19,6 +19,7 @@ impl Plugin for NpcPlugin {
 			.add_system_set(
 				SystemSet::on_update(GameState::Overworld)
 					.with_system(npc_dialog)
+					.with_system(highlight_npc)
 			)
 		;
 	}
@@ -34,6 +35,9 @@ pub struct NpcDialogUIRoot;
 pub struct NpcDialogUIText;
 
 #[derive(Component)]
+pub struct NpcBubble;
+
+#[derive(Component)]
 pub enum Npc {
 	Healer,
 }
@@ -44,7 +48,26 @@ pub enum Npc {
 fn setup_dialog_ui (
 	mut commands : Commands,
 	pixel_font : Res<PixelFont>,
+	tilesheet : Res<Tilesheet>,
 ) {
+	let id = spawn_tilesheet_sprite(
+		&mut commands,
+		&tilesheet,
+		49 * 14 - 11,
+		Vec3::ZERO,
+		None,
+	);
+
+	commands.entity(id).insert((
+		NpcBubble,
+		Transform {
+			translation: Vec3::new(0., TILE_SIZE * 0.75, 0.),
+			scale: Vec3::splat(0.5),
+			..default()
+		},
+		Visibility { is_visible: false },
+	));
+
 	commands.spawn((
 		NpcDialogUIRoot,
 		NodeBundle {
@@ -127,11 +150,41 @@ fn npc_dialog (
 		Vec2::distance(
 			transform.translation.truncate(),
 			player_transform.translation.truncate(),
-		) < TILE_SIZE * 1.5
+		) < TILE_SIZE * 1.25
 	}) {
 		ui_text.single_mut().sections[0].value = "Heal, heal, HEAL!".into();
 		ui.single_mut().is_visible = true;
 		player.active = false;
 		stats.health = stats.max_health;
 	}
+}
+
+fn highlight_npc (
+	mut commands : Commands,
+	mut player_query : Query<&Transform, With<Player>>,
+	npc_query : Query<(Entity, &Npc, &Transform)>,
+	mut bubble_query : Query<(Entity, &mut Visibility), With<NpcBubble>>,
+) {
+	let player_transform = player_query.single_mut();
+	let (id, mut visibility) = bubble_query.single_mut();
+
+	for (entity, _npc, _) in npc_query.iter().filter(|(_, _, transform)| {
+		Vec2::distance(
+			transform.translation.truncate(),
+			player_transform.translation.truncate(),
+		) < TILE_SIZE * 1.5
+	}) {
+		commands.entity(id).remove_parent();
+
+		commands
+			.entity(entity)
+			.push_children(&[id]);
+
+		visibility.is_visible = true;
+
+		return;
+	}
+
+	commands.entity(id).remove_parent();
+	visibility.is_visible = false;
 }

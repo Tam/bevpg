@@ -1,4 +1,6 @@
 use bevy::prelude::*;
+use crate::core::assets::Tilesheet;
+use crate::core::tilemap::create_simple_map;
 use crate::GameState;
 
 // Plugin
@@ -40,14 +42,21 @@ pub struct SceneOverworld;
 
 fn spawn_scene (
 	mut commands : Commands,
+	tilesheet : Res<Tilesheet>,
 ) {
+	let map = create_simple_map(
+		"test",
+		&mut commands,
+		tilesheet,
+	);
+
 	commands.spawn((
 		SceneOverworld,
+		Transform::default(),
 		GlobalTransform::default(),
 		Visibility::default(),
-	));
-
-	// TODO: attach all entities to SceneOverworld
+		ComputedVisibility::default(),
+	)).push_children(&[map]);
 }
 
 fn despawn_scene (

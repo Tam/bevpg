@@ -4,7 +4,7 @@ use bevy_kira_audio::AudioPlugin as KiraAudioPlugin;
 use rand::Rng;
 use crate::combat::{CombatState, FightEvent};
 use crate::GameState;
-use crate::math::clamp01;
+use crate::util::math::clamp01;
 
 // Plugin
 // =========================================================================

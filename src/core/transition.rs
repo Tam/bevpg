@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use crate::GameState;
-use crate::math::{clamp01, lerp3};
+use crate::util::math::{clamp01, lerp3};
 
 // Plugin
 // =========================================================================
@@ -31,15 +31,15 @@ struct ScreenFade {
 
 fn fadeout (
 	mut commands : Commands,
-	mut query : Query<(Entity, &mut ScreenFade, &mut Sprite)>,
+	mut query : Query<(Entity, &mut ScreenFade, &mut BackgroundColor)>,
 	mut state : ResMut<State<GameState>>,
 	time : Res<Time>,
 ) {
-	for (id, mut fade, mut sprite) in query.iter_mut() {
+	for (id, mut fade, mut fill) in query.iter_mut() {
 		fade.timer.tick(time.delta());
 
 		fade.alpha = clamp01(lerp3(0., 1.25, 0., fade.timer.percent()));
-		sprite.color.set_a(fade.alpha);
+		fill.0.set_a(fade.alpha);
 
 		if fade.timer.percent() > 0.5 && !fade.sent {
 			if let Some(next) = fade.next_state {
@@ -67,16 +67,14 @@ pub fn create_fadeout (
 	color.set_a(0.0);
 
 	commands
-		.spawn(SpriteBundle {
-			sprite: Sprite {
-				color,
-				custom_size: Some(Vec2::splat(10000.)),
+		.spawn(NodeBundle {
+			style: Style {
+				position_type: PositionType::Absolute,
+				size: Size::new(Val::Percent(100.), Val::Percent(100.)),
 				..default()
 			},
-			transform: Transform {
-				translation: Vec2::ZERO.extend(999.),
-				..default()
-			},
+			z_index: ZIndex::Global(999),
+			background_color: BackgroundColor(color),
 			..default()
 		})
 		.insert(ScreenFade {

@@ -1,7 +1,7 @@
 use bevy::prelude::*;
-use crate::assets::PixelFont;
+use crate::core::assets::PixelFont;
+use crate::core::transition::create_fadeout;
 use crate::GameState;
-use crate::transition::create_fadeout;
 use crate::ui::Disabled;
 
 // Plugin
@@ -12,7 +12,10 @@ pub struct MainMenuPlugin;
 impl Plugin for MainMenuPlugin {
 	fn build(&self, app: &mut App) {
 		app
-			.add_startup_system(setup_menu)
+			.add_system_set(
+				SystemSet::on_enter(GameState::MainMenu)
+					.with_system(setup_menu)
+			)
 			.add_system_set(
 				SystemSet::on_resume(GameState::MainMenu)
 					.with_system(set_ui_visibility(true))

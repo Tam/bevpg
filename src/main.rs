@@ -1,28 +1,22 @@
 mod player;
-mod debug;
-mod assets;
-mod tilemap;
 mod combat;
-mod transition;
-mod math;
-mod animator;
-mod audio;
 mod scenes;
 mod ui;
 mod npc;
+mod util;
+mod core;
 
 use bevy::prelude::*;
 use bevy::render::camera::ScalingMode;
 use bevy::window::PresentMode;
-use crate::assets::AssetsPlugin;
-use crate::audio::AudioPlugin;
 use crate::combat::CombatPlugin;
-use crate::debug::DebugPlugin;
+use crate::core::assets::AssetsPlugin;
+use crate::core::audio::AudioPlugin;
+use crate::core::debug::DebugPlugin;
+use crate::core::transition::TransitionPlugin;
 use crate::npc::NpcPlugin;
 use crate::player::PlayerPlugin;
 use crate::scenes::ScenesPlugin;
-use crate::tilemap::TilemapPlugin;
-use crate::transition::TransitionPlugin;
 use crate::ui::UiPlugin;
 
 const TILE_SIZE : f32 = 1.;
@@ -58,7 +52,6 @@ fn main() {
         .add_plugin(PlayerPlugin)
         .add_plugin(NpcPlugin)
         .add_plugin(CombatPlugin)
-        .add_plugin(TilemapPlugin)
         .add_plugin(TransitionPlugin)
         .add_plugin(AudioPlugin)
         .add_plugin(ScenesPlugin)

@@ -2,11 +2,12 @@ use std::time::Duration;
 use bevy::prelude::*;
 use bevy::sprite::collide_aabb::collide;
 use rand::Rng;
-use crate::{animator, GameState, PIXEL_SIZE, TILE_SIZE};
-use crate::assets::{spawn_tilesheet_sprite, Tilesheet};
+use crate::{GameState, PIXEL_SIZE, TILE_SIZE};
 use crate::combat::CombatStats;
-use crate::tilemap::{EncounterSpawner, TileCollider};
-use crate::transition::create_fadeout;
+use crate::core::animator;
+use crate::core::assets::{spawn_tilesheet_sprite, Tilesheet};
+use crate::core::tilemap::{EncounterSpawner, TileCollider};
+use crate::core::transition::create_fadeout;
 
 // Plugin
 // =========================================================================
@@ -26,9 +27,9 @@ impl Plugin for PlayerPlugin {
 			)
 			.add_system_set(
 				SystemSet::on_update(GameState::Overworld)
-					.with_system(player_movement.label("movement"))
-					.with_system(cam_follow_player.after("movement"))
-					.with_system(player_encounter_checker.after("movement"))
+					.with_system(player_movement)
+					.with_system(cam_follow_player.after(player_movement))
+					.with_system(player_encounter_checker.after(player_movement))
 			)
 			.add_system_set(
 				SystemSet::on_pause(GameState::Overworld)
