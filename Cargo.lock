@@ -232,6 +232,7 @@ dependencies = [
  "bevy",
  "bevy-inspector-egui",
  "bevy_kira_audio",
+ "bevy_ninepatch",
  "rand",
 ]
 
@@ -633,6 +634,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bbfb5908d33fd613069be516180b8f138aaaf6e41c36b1fd98c6c29c00c24a13"
 dependencies = [
  "glam",
+]
+
+[[package]]
+name = "bevy_ninepatch"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ed667101c9a684a3d4fb808749485d8010cc793eed0a80d30315a06b6a5bef0e"
+dependencies = [
+ "bevy",
 ]
 
 [[package]]

@@ -146,8 +146,8 @@ fn handle_attack_effects (
 	attack_fx.timer.tick(time.delta());
 	let mut enemy = enemy_query.single_mut();
 
-	match state.current() {
-		&CombatState::PlayerAttack => {
+	match *state.current() {
+		CombatState::PlayerAttack => {
 			if attack_fx.timer.just_finished() {
 				enemy.is_visible = true;
 				state.set(CombatState::EnemyTurn(false)).unwrap();
@@ -155,7 +155,7 @@ fn handle_attack_effects (
 				enemy.is_visible = attack_fx.timer.elapsed_secs() % attack_fx.flash > attack_fx.flash * 0.5;
 			}
 		},
-		&CombatState::EnemyAttack => {
+		CombatState::EnemyAttack => {
 			if attack_fx.timer.just_finished() {
 				state.set(CombatState::PlayerTurn).unwrap();
 			} else {

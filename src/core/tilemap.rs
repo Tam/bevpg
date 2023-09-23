@@ -26,7 +26,7 @@ pub fn create_simple_map (
 	tilesheet : Res<Tilesheet>,
 ) -> Entity {
 	let file = File::open(
-		format!("assets/maps/{}.txt", name)
+		format!("assets/maps/{name}.txt")
 	).expect("Map file missing!");
 	let mut tiles = Vec::new();
 

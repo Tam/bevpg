@@ -19,7 +19,7 @@ pub fn walk_cycle (path : Vec<Name>) -> AnimationClip {
 	);
 
 	animation.add_curve_to_path(
-		EntityPath { parts: path.clone() },
+		EntityPath { parts: path },
 		VariableCurve {
 			keyframe_timestamps: vec![0., 0.2, 0.4, 0.6, 0.8],
 			keyframes: Keyframes::Rotation(vec![

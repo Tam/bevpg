@@ -1,15 +1,21 @@
+#![allow(
+    clippy::type_complexity
+)]
+
 mod player;
 mod combat;
 mod scenes;
-mod ui;
 mod npc;
 mod util;
 mod core;
+mod ui;
+mod consts;
 
 use bevy::prelude::*;
 use bevy::render::camera::ScalingMode;
 use bevy::window::PresentMode;
 use crate::combat::CombatPlugin;
+use crate::consts::BG_COLOR;
 use crate::core::assets::AssetsPlugin;
 use crate::core::audio::AudioPlugin;
 use crate::core::debug::DebugPlugin;
@@ -32,7 +38,7 @@ pub enum GameState {
 fn main() {
     App::new()
         .add_state(GameState::MainMenu)
-        .insert_resource(ClearColor(Color::hex("432E3B").unwrap()))
+        .insert_resource(ClearColor(BG_COLOR))
         .insert_resource(Msaa { samples: 1 })
         .add_plugins(
             DefaultPlugins
@@ -62,7 +68,6 @@ fn main() {
 fn setup_camera(
     mut commands : Commands,
 ) {
-    // Camera
     commands.spawn(Camera2dBundle {
         projection: OrthographicProjection {
             scaling_mode: ScalingMode::FixedHorizontal(1.),

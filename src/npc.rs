@@ -80,7 +80,6 @@ fn setup_dialog_ui (
 			},
 			visibility: Visibility {
 				is_visible: false,
-				..default()
 			},
 			..default()
 		},
@@ -168,7 +167,7 @@ fn highlight_npc (
 	let player_transform = player_query.single_mut();
 	let (id, mut visibility) = bubble_query.single_mut();
 
-	for (entity, _npc, _) in npc_query.iter().filter(|(_, _, transform)| {
+	if let Some((entity, _npc, _)) = npc_query.iter().find(|(_, _, transform)| {
 		Vec2::distance(
 			transform.translation.truncate(),
 			player_transform.translation.truncate(),

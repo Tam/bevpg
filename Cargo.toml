@@ -9,6 +9,7 @@ edition = "2021"
 rand = "0.8"
 bevy-inspector-egui = "0.17"
 bevy_kira_audio = "0.13.0"
+bevy_ninepatch = "0.9"
 
 [dependencies.bevy]
 version = "0.9"

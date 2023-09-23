@@ -1,9 +1,7 @@
 use std::ops::RangeInclusive;
 
 pub fn clamp01 (a : f32) -> f32 {
-	if a < 0. { 0. }
-	else if a > 1. { 1. }
-	else { a }
+	a.clamp(0., 1.)
 }
 
 pub fn lerp3 (a : f32, b : f32, c : f32, t : f32) -> f32 {
